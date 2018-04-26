@@ -73,7 +73,6 @@ class App extends Component {
         auth: Auth.isUserAuthenticated(),
       })
     }).catch(err => console.log(err))
-
   }
 
   render() {
