@@ -60,6 +60,22 @@ class App extends Component {
       })
   }
 
+  handleLogout = () => {
+    fetch('/logout', {
+      method: 'DELETE',
+      headers: {
+        token: Auth.getToken(),
+        'Authorization': `Token ${Auth.getToken()}`,
+      }
+    }).then(res => {
+      Auth.deauthenticateToken();
+      this.setState({
+        auth: Auth.isUserAuthenticated(),
+      })
+    }).catch(err => console.log(err))
+
+  }
+
   render() {
     return (
       <Router>
@@ -69,6 +85,7 @@ class App extends Component {
             <Link to="/register">Register</Link>
             <Link to="/dash">Dash</Link>
             <Link to="/predictions">Predictions</Link>
+            <span onClick={this.handleLogout}>Logout</span>
           </div>
           <Route exact path="/predictions" render={() => <PredictionList />} />
           <Route
