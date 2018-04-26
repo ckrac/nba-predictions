@@ -7,12 +7,14 @@ import Auth from './modules/Auth';
 import PredictionList from './components/PredictionList';
 import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
+import Dashboard from './components/Dashboard';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       auth: Auth.isUserAuthenticated(),
+      // shouldGoToDash: false,
     }
   }
 
@@ -31,6 +33,7 @@ class App extends Component {
         Auth.authenticateToken(res.token);
         this.setState({
           auth: Auth.isUserAuthenticated(),
+          // shouldGoToDash: true,
         });
       }).catch(err => {
         console.log(err);
@@ -50,6 +53,7 @@ class App extends Component {
         Auth.authenticateToken(res.token);
         this.setState({
           auth: Auth.isUserAuthenticated(),
+          // shouldGoToDash: true,
         });
       }).catch(err => {
         console.log(err);
@@ -60,13 +64,26 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
+          <div>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+            <Link to="/dash">Dash</Link>
+            <Link to="/predictions">Predictions</Link>
+          </div>
           <Route exact path="/predictions" render={() => <PredictionList />} />
           <Route
             exact path="/register"
-            render={() => <RegisterForm handleRegisterSubmit={this.handleRegisterSubmit} />} />
+            render={() => (this.state.auth)
+              ? <Redirect to="/dash" />
+              : <RegisterForm handleRegisterSubmit={this.handleRegisterSubmit} />} />
           <Route
             exact path="/login"
-            render={() => <LoginForm handleLoginSubmit={this.handleLoginSubmit} />} />
+            render={() => (this.state.auth)
+              ? <Redirect to="/dash" />
+              : <LoginForm handleLoginSubmit={this.handleLoginSubmit} />} />
+          <Route
+            exact path="/dash"
+            render={() => <Dashboard />} />
         </div>
       </Router>
     );
